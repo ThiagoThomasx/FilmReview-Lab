@@ -93,6 +93,7 @@ A identidade visual segue o sistema **Henry** — broadside editorial monocromá
 4. **Analisar** — clique em "Analisar crítica" para gerar diagnóstico local sem IA externa
 5. **Salvar** — review e análise persistem no `localStorage`, URL atualiza para `/escrever/:id`
 6. **Biblioteca** — `/biblioteca` lista todas as reviews em modo Arquivo ou Pipeline, com busca, filtros, ordenação e ações rápidas
+7. **Insights** — `/insights` exibe relatório editorial de evolução crítica: scores, dimensões, distribuições e tendências
 
 ## Motor de análise local
 
@@ -187,7 +188,38 @@ No modo Arquivo, cada item permite: **editar** (navega para o editor), **alterar
 - Sem importação ou exportação de reviews
 - Sem integração automática com Letterboxd
 - Sem backend ou sincronização entre dispositivos
-- Sem gráficos de evolução longitudinal da escrita
+
+## Insights críticos
+
+A aba **Insights** (`/insights`) apresenta um relatório editorial da evolução da sua escrita, calculado localmente a partir das reviews salvas.
+
+### Métricas disponíveis
+
+| Seção | Métricas |
+|-------|----------|
+| **Panorama geral** | Total, analisadas, sem parecer, desatualizadas, publicadas, prontas, para revisar |
+| **Qualidade média** | Score médio geral, média de palavras por review, total de palavras escritas |
+| **Dimensões da escrita** | Médias das 6 dimensões + dimensão mais forte e mais fraca |
+| **Temperatura** | Distribuição de reviews por temperatura (quente a congelada) |
+| **Status** | Distribuição de reviews por status de pipeline |
+| **Produção por mês** | Quantidade de reviews e score médio por mês |
+| **Melhores críticas** | Top 5 reviews por score geral |
+| **Reescritas prioritárias** | Até 5 reviews com menor score ou status "revisar" |
+| **Tags mais usadas** | Tags mais frequentes no arquivo |
+
+### Como interpretar a evolução crítica
+
+- **Score médio crescendo** — sua escrita está ganhando calor ao longo do tempo.
+- **Dimensão mais fraca** — indica onde focar nas próximas reescritas.
+- **Temperatura MORNA ou QUENTE** na distribuição — proporção de reviews publicáveis.
+- **Reescritas prioritárias** — reviews que mais ganhariam com uma revisão.
+
+### Limitações dos insights
+
+- Baseados nos dados locais do `localStorage` — não há comparação com outros autores.
+- O score médio reflete apenas reviews que passaram por análise.
+- Reviews escritas em outros idiomas têm scores potencialmente subestimados (motor em português).
+- Não há histórico temporal de scores — só o estado atual de cada review.
 
 Reviews salvas antes da Sprint 4 sem `analysisTextHash` são compatíveis — o sistema usa comparação de texto em memória como fallback.
 
@@ -220,4 +252,6 @@ O Review Heat é uma ferramenta pessoal, não um serviço. A escolha de `localSt
 | **2** | Editor de críticas, CRUD completo, salvamento no localStorage, biblioteca | ✅ Concluído |
 | **3** | Motor local de análise: temperatura, scoring multidimensional, painel editorial | ✅ Concluído |
 | **4** | Output visual premium: diagnóstico editorial, checklist de reescrita, termos detectados, staleness persistido | ✅ Concluído |
-| 5 | Insights longitudinais: gráficos, padrões, evolução da escrita | Em planejamento |
+| **5** | Biblioteca avançada: busca, filtros, ordenação, pipeline, estatísticas, ações rápidas | ✅ Concluído |
+| **6** | Insights críticos: domínio de insights, panorama geral, dimensões, distribuições, produção mensal, top reviews | ✅ Concluído |
+| 7 | Exportação / importação de reviews, backup, sincronização | Em planejamento |

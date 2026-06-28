@@ -1,5 +1,28 @@
 # Changelog
 
+## [Unreleased] — Sprint 6: Insights de Evolução Crítica
+
+### Adicionado
+
+- `src/domain/reviewInsights.ts` — domínio puro de insights: tipos `ScoreDimension`, `ReviewInsights`; constante `DIMENSION_LABELS`; funções `getReviewInsights`, `getAverageScore`, `getTemperatureDistribution`, `getStatusDistribution`, `getAverageDimensionScores`, `getTopReviews`, `getWeakestReviews`, `getMostUsedTags`, `getReviewsByMonth`
+- `src/domain/reviewInsights.test.ts` — 36 testes cobrindo: lista vazia, contagem de totais, reviews analisadas/não analisadas/stale, score médio, contagem de palavras, distribuição de temperatura, distribuição de status, médias de dimensões, dimensão mais forte/fraca, top reviews, reviews mais fracas, tags mais usadas, agrupamento por mês, dados mistos e scores ausentes
+
+### Alterado
+
+- `src/pages/InsightsPage.tsx` — substituído placeholder estático por painel editorial real com dados calculados localmente:
+  - **Panorama geral** — total, analisadas, sem parecer, desatualizadas, publicadas, prontas, para revisar
+  - **Qualidade média** — score médio geral, média de palavras, total de palavras escritas
+  - **Dimensões da escrita** — barras monocromáticas para as 6 dimensões com marcação de mais forte e mais fraca
+  - **Temperatura** — distribuição em barras horizontais monocromáticas
+  - **Status** — distribuição de reviews por status de pipeline
+  - **Produção por mês** — tabela editorial com quantidade e score médio mensal
+  - **Melhores críticas** — top 5 reviews por score, em seção invertida
+  - **Reescritas prioritárias** — até 5 reviews com menor score ou `needs_revision`
+  - **Tags mais usadas** — tags com contador em chips monocromáticos
+  - Estado vazio editorial quando não há reviews
+  - Estado parcial quando há reviews mas nenhuma analisada
+- `README.md` — adicionada seção "Insights críticos" com métricas disponíveis, como interpretar e limitações; fluxo do app atualizado; roadmap atualizado com Sprints 5 e 6
+
 ## [Unreleased] — Sprint 5: Biblioteca Avançada e Pipeline Editorial
 
 ### Adicionado
