@@ -8,6 +8,7 @@ import {
   ALL_STATUSES,
 } from "../domain/reviews";
 import { analyzeReview } from "../domain/reviewAnalyzer";
+import { simpleHash } from "../lib/analysisCopy";
 import { TagInput } from "./TagInput";
 import { ReviewAnalysisPanel } from "./ReviewAnalysisPanel";
 
@@ -56,7 +57,12 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
 
   const words = countWords(text);
 
-  const isStale = analysis !== undefined && text.trim() !== analysedTextRef.current.trim();
+  const storedHash = existingReview?.analysisTextHash;
+  const isStale =
+    analysis !== undefined &&
+    (storedHash !== undefined
+      ? simpleHash(text) !== storedHash
+      : text.trim() !== analysedTextRef.current.trim());
 
   const handleAnalyze = useCallback(() => {
     if (!text.trim()) {
@@ -67,12 +73,13 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
     setAnalysisState("analyzing");
 
     const result = analyzeReview(text);
+    const hash = simpleHash(text);
     setAnalysis(result);
     analysedTextRef.current = text;
     setAnalysisState("done");
 
     if (existingReview) {
-      updateReview(existingReview.id, { analysis: result });
+      updateReview(existingReview.id, { analysis: result, analysisTextHash: hash });
     }
   }, [text, existingReview]);
 
@@ -114,7 +121,10 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
           letterboxdUrl: letterboxdUrl || undefined,
         });
         if (analysis) {
-          const withAnalysis = updateReview(saved.id, { analysis });
+          const withAnalysis = updateReview(saved.id, {
+            analysis,
+            analysisTextHash: simpleHash(text),
+          });
           if (withAnalysis) saved = withAnalysis;
         }
       }

@@ -1,5 +1,27 @@
 # Changelog
 
+## [Unreleased] — Sprint 4: Output Visual Premium da Análise
+
+### Adicionado
+
+- `src/lib/analysisCopy.ts` — helpers de copy editorial: `getEditorialDiagnosis(temperature)`, `getScoreStateLabel(score)`, `getLibraryStatusPhrase(temperature)`, `simpleHash(text)`
+- `src/lib/analysisCopy.test.ts` — 17 testes cobrindo diagnóstico, estado de score, frase de biblioteca e hash determinístico
+- `analysisTextHash?: string` em `ReviewEntry` — hash persistido do texto analisado para detecção de staleness entre sessões
+
+### Alterado
+
+- `src/components/ReviewAnalysisPanel.tsx` — redesign completo como "laudo editorial":
+  - Aviso de parecer desatualizado mais prominente com label bold
+  - Hero com temperatura em display type (77px) ao lado do score geral
+  - Diagnóstico editorial principal em serif com borda lateral
+  - ScoreBlock com barra plana, label de estado (Forte / Em desenvolvimento / Frágil) e descrição por dimensão
+  - Seção invertida (ink) para pontos fortes e fragilidades
+  - Checklist "Como esquentar esta crítica" com ícone de checkbox tipográfico
+  - Vocabulário cinematográfico e expressões vagas como tags monocromáticas com borda 1px e radius 12px
+  - Mensagem útil quando nenhum termo técnico é detectado
+- `src/components/ReviewEditor.tsx` — staleness baseado em hash persistido; salva `analysisTextHash` em `updateReview` e em nova review com análise
+- `src/pages/LibraryPage.tsx` — frase de status editorial por temperatura ("Parecer quente", "Precisa reescrita" etc.); label "Sem parecer crítico" para reviews não analisadas
+
 ## [Unreleased] — Sprint 3: Motor Local de Análise de Reviews
 
 ### Adicionado

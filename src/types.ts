@@ -48,6 +48,7 @@ export type ReviewEntry = {
   status: ReviewStatus;
   tags: string[];
   analysis?: ReviewAnalysis;
+  analysisTextHash?: string;
   letterboxdUrl?: string;
   createdAt: string;
   updatedAt: string;
