@@ -90,8 +90,45 @@ A identidade visual segue o sistema **Henry** — broadside editorial monocromá
 1. **Buscar filme** — pesquise pelo nome em `/escrever`, buscas recentes são cacheadas
 2. **Selecionar filme** — o painel exibe poster e metadados do filme
 3. **Escrever crítica** — formulário editorial com texto, título, nota, status, tags e link Letterboxd
-4. **Salvar** — review persiste no `localStorage` e a URL atualiza para `/escrever/:id`
-5. **Biblioteca** — `/biblioteca` lista todas as reviews salvas com edição e exclusão
+4. **Analisar** — clique em "Analisar crítica" para gerar diagnóstico local sem IA externa
+5. **Salvar** — review e análise persistem no `localStorage`, URL atualiza para `/escrever/:id`
+6. **Biblioteca** — `/biblioteca` lista todas as reviews com temperatura, score e status
+
+## Motor de análise local
+
+O motor de análise (`src/domain/reviewAnalyzer.ts`) avalia a qualidade de uma crítica sem nenhuma IA externa. Funciona offline, é determinístico e não envia dados para nenhum servidor.
+
+### Dimensões avaliadas
+
+| Dimensão | O que mede |
+|----------|-----------|
+| **Profundidade** | Tamanho, presença de análise temática, desenvolvimento |
+| **Especificidade** | Referência a elementos formais concretos do filme |
+| **Argumento** | Conectores causais e de contraste, sustentação de tese |
+| **Estilo** | Variedade lexical, ritmo de frases, fluidez do texto |
+| **Técnica** | Uso de vocabulário cinematográfico formal |
+| **Publicabilidade** | Equilíbrio geral, tamanho mínimo, baixa vagueza |
+
+### Temperatura
+
+O score geral (0–100) determina a temperatura da crítica:
+
+| Score | Temperatura | Rótulo PT |
+|-------|-------------|-----------|
+| 90–100 | hot | QUENTE |
+| 70–89 | warm | MORNA |
+| 50–69 | cool | FRESCA |
+| 30–49 | cold | FRIA |
+| 0–29 | frozen | CONGELADA |
+
+A temperatura é comunicada por tipografia e contraste — sem cores de status.
+
+### Limitações do motor baseado em regras
+
+- A análise é lexical: detecta termos, não semântica. Uma crítica bem escrita sobre estética visual pode não usar os termos exatos da lista e receber score menor.
+- O motor não distingue uso irônico ou negativo de termos técnicos.
+- Reviews em outros idiomas não são suportadas.
+- Nenhuma IA externa é usada — nesta versão, o motor é intencionalmente baseado em heurísticas e vocabulário.
 
 ## Persistência de dados
 
@@ -99,14 +136,8 @@ Todos os dados ficam no `localStorage` do navegador, sem servidor.
 
 | Dado | Chave localStorage |
 |------|--------------------|
-| Reviews | `review-heat:reviews:v1` |
+| Reviews e análises | `review-heat:reviews:v1` |
 | Cache de buscas | `review-heat:search-cache:v1` |
-
-### Limitações atuais (Sprint 2)
-
-- Nenhuma análise automática de texto
-- Nenhum cálculo de temperatura
-- Nenhum score ou insight — previsto para Sprint 3
 
 ## Decisão: localStorage
 
@@ -119,5 +150,5 @@ O Review Heat é uma ferramenta pessoal, não um serviço. A escolha de `localSt
 | **0** | Fundação: Vite, React, TypeScript, Tailwind, Vitest, tipos, storage, layout editorial | ✅ Concluído |
 | **1** | Busca de filmes via TMDb, seleção, cache de buscas recentes | ✅ Concluído |
 | **2** | Editor de críticas, CRUD completo, salvamento no localStorage, biblioteca | ✅ Concluído |
-| 3 | Motor de análise: temperatura, scoring de profundidade, especificidade, argumento | Em planejamento |
+| **3** | Motor local de análise: temperatura, scoring multidimensional, painel editorial | ✅ Concluído |
 | 4 | Insights longitudinais: gráficos, padrões, evolução da escrita | Em planejamento |

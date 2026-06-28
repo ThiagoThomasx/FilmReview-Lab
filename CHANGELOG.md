@@ -1,6 +1,59 @@
 # Changelog
 
-## [Unreleased] — Sprint 2: Escrita e Salvamento de Reviews
+## [Unreleased] — Sprint 3: Motor Local de Análise de Reviews
+
+### Adicionado
+
+- `src/data/technicalTerms.ts` — lista de termos cinematográficos técnicos (direção, fotografia, montagem, mise-en-scène, etc.)
+- `src/data/vagueTerms.ts` — lista de expressões vagas que enfraquecem a crítica
+- `src/data/argumentTerms.ts` — conectores argumentativos e marcadores de raciocínio
+- `src/data/cinemaElements.ts` — elementos narrativos e formais do cinema (cena, plano, travelling, etc.)
+- `src/domain/reviewAnalyzer.ts` — motor local de análise com `analyzeReview(text): ReviewAnalysis` e `TEMPERATURE_LABELS`
+- `src/domain/reviewAnalyzer.test.ts` — 21 testes cobrindo texto vazio, texto curto, texto vago, termos técnicos, argumento, profundidade, invariantes de score e determinismo
+- `src/components/ReviewAnalysisPanel.tsx` — painel editorial visual com temperatura, score geral, barras de dimensão, termos detectados e feedback textual (pontos fortes, fraquezas, sugestões)
+
+### Alterado
+
+- `src/components/ReviewEditor.tsx` — botão "Analisar crítica", exibição do painel de análise, aviso de análise desatualizada quando o texto muda, salvamento da análise junto da review
+- `src/pages/LibraryPage.tsx` — exibe temperatura textual e score quando a review foi analisada; exibe "não analisada" quando não há análise
+- `src/domain/reviews.test.ts` — corrigido flake de timing no teste de ordenação com `vi.setSystemTime`
+
+### Dimensões de análise
+
+O motor avalia seis dimensões sem IA externa:
+
+| Dimensão | O que mede |
+|----------|-----------|
+| Profundidade | Tamanho, tema, estrutura, desenvolvimento |
+| Especificidade | Presença de elementos formais concretos |
+| Argumento | Conectores, causalidade, contraste, tese |
+| Estilo | Variedade lexical, ritmo de frases, fluidez |
+| Técnica | Vocabulário cinematográfico formal |
+| Publicabilidade | Equilíbrio geral, tamanho mínimo, baixa vagueza |
+
+### Temperatura
+
+Calculada a partir do `overallScore`:
+
+| Score | Temperatura | Rótulo |
+|-------|-------------|--------|
+| 90–100 | hot | QUENTE |
+| 70–89 | warm | MORNA |
+| 50–69 | cool | FRESCA |
+| 30–49 | cold | FRIA |
+| 0–29 | frozen | CONGELADA |
+
+### Decisões técnicas
+
+- **Motor puramente local**: nenhuma chamada de API, nenhum LLM, funciona offline
+- **Análise determinística**: o mesmo texto produz sempre o mesmo resultado
+- **Análise salva no registro**: `updateReview(id, { analysis })` persiste a análise junto da review
+- **Indicador de desatualização**: aviso discreto quando o texto muda após a análise sem nova análise
+- **Temperatura sem cor**: comunicada por tipografia, contraste e escala — sem verde/vermelho/amarelo/azul
+
+---
+
+## Sprint 2: Escrita e Salvamento de Reviews
 
 ### Adicionado
 

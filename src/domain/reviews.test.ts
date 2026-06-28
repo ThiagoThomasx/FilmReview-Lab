@@ -82,7 +82,9 @@ describe("getReviews", () => {
 
   it("ordena por updatedAt decrescente", () => {
     const a = createReview({ movie: mockMovie, text: "A" });
+    vi.setSystemTime(new Date(Date.now() + 1000));
     const b = createReview({ movie: mockMovie, text: "B" });
+    vi.useRealTimers();
     const list = getReviews();
     expect(list[0].id).toBe(b.id);
     expect(list[1].id).toBe(a.id);

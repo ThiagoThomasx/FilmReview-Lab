@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import type { ReviewEntry } from "../types";
 import { getReviews, deleteReview, countWords, STATUS_LABELS } from "../domain/reviews";
+import { TEMPERATURE_LABELS } from "../domain/reviewAnalyzer";
 import { EditorialSection, InvertedSection } from "../components/EditorialSection";
 import { PageHeading } from "../components/PageHeading";
 import { Rule } from "../components/Rule";
@@ -149,6 +150,45 @@ function ReviewRow({
           >
             {words} {words === 1 ? "palavra" : "palavras"}
           </span>
+
+          {review.analysis ? (
+            <>
+              <span
+                style={{
+                  fontFamily: "var(--font-neue-montreal)",
+                  fontSize: "var(--text-caption)",
+                  letterSpacing: "var(--tracking-caption)",
+                  textTransform: "uppercase",
+                  color: "var(--color-headline-ink)",
+                  border: "1px solid var(--color-headline-ink)",
+                  borderRadius: "var(--radius-tags)",
+                  padding: "2px 10px",
+                }}
+              >
+                {TEMPERATURE_LABELS[review.analysis.temperature]}
+              </span>
+              <span
+                style={{
+                  fontFamily: "var(--font-neue-montreal)",
+                  fontSize: "var(--text-caption)",
+                  color: "var(--color-ash)",
+                }}
+              >
+                {review.analysis.overallScore}/100
+              </span>
+            </>
+          ) : (
+            <span
+              style={{
+                fontFamily: "var(--font-neue-montreal)",
+                fontSize: "var(--text-caption)",
+                color: "var(--color-pebble)",
+                fontStyle: "italic",
+              }}
+            >
+              não analisada
+            </span>
+          )}
 
           <span
             style={{

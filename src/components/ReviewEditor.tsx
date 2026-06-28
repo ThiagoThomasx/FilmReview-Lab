@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import type { ReviewEntry, ReviewStatus, MovieInfo } from "../types";
+import { useState, useEffect, useCallback, useRef } from "react";
+import type { ReviewEntry, ReviewStatus, MovieInfo, ReviewAnalysis } from "../types";
 import {
   createReview,
   updateReview,
@@ -7,7 +7,9 @@ import {
   STATUS_LABELS,
   ALL_STATUSES,
 } from "../domain/reviews";
+import { analyzeReview } from "../domain/reviewAnalyzer";
 import { TagInput } from "./TagInput";
+import { ReviewAnalysisPanel } from "./ReviewAnalysisPanel";
 
 type Props = {
   movie: MovieInfo | null;
@@ -16,6 +18,7 @@ type Props = {
 };
 
 type SaveState = "idle" | "saving" | "saved" | "error";
+type AnalysisState = "idle" | "analyzing" | "done";
 
 export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
   const [text, setText] = useState(existingReview?.text ?? "");
@@ -32,6 +35,11 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
   );
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const [validationError, setValidationError] = useState("");
+  const [analysis, setAnalysis] = useState<ReviewAnalysis | undefined>(
+    existingReview?.analysis,
+  );
+  const [analysisState, setAnalysisState] = useState<AnalysisState>("idle");
+  const analysedTextRef = useRef<string>(existingReview?.text ?? "");
 
   useEffect(() => {
     if (existingReview) {
@@ -41,10 +49,32 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
       setStatus(existingReview.status);
       setTags(existingReview.tags);
       setLetterboxdUrl(existingReview.letterboxdUrl ?? "");
+      setAnalysis(existingReview.analysis);
+      analysedTextRef.current = existingReview.text;
     }
   }, [existingReview?.id]);
 
   const words = countWords(text);
+
+  const isStale = analysis !== undefined && text.trim() !== analysedTextRef.current.trim();
+
+  const handleAnalyze = useCallback(() => {
+    if (!text.trim()) {
+      setValidationError("Escreva o texto da review antes de analisar.");
+      return;
+    }
+    setValidationError("");
+    setAnalysisState("analyzing");
+
+    const result = analyzeReview(text);
+    setAnalysis(result);
+    analysedTextRef.current = text;
+    setAnalysisState("done");
+
+    if (existingReview) {
+      updateReview(existingReview.id, { analysis: result });
+    }
+  }, [text, existingReview]);
 
   const handleSave = useCallback(() => {
     if (!movie) return;
@@ -69,6 +99,7 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
           status,
           tags,
           letterboxdUrl: letterboxdUrl || undefined,
+          analysis: analysis ?? existingReview.analysis,
         });
         if (!updated) throw new Error("Review não encontrada.");
         saved = updated;
@@ -82,6 +113,10 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
           tags,
           letterboxdUrl: letterboxdUrl || undefined,
         });
+        if (analysis) {
+          const withAnalysis = updateReview(saved.id, { analysis });
+          if (withAnalysis) saved = withAnalysis;
+        }
       }
 
       setSaveState("saved");
@@ -92,7 +127,7 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
       setValidationError(msg);
       setSaveState("error");
     }
-  }, [movie, text, title, personalRating, status, tags, letterboxdUrl, existingReview, onSaved]);
+  }, [movie, text, title, personalRating, status, tags, letterboxdUrl, analysis, existingReview, onSaved]);
 
   if (!movie) {
     return (
@@ -225,8 +260,8 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
         />
       </div>
 
-      {/* Ação de salvar */}
-      <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-24)" }}>
+      {/* Ações */}
+      <div style={{ display: "flex", alignItems: "center", gap: "var(--spacing-16)", flexWrap: "wrap" }}>
         <button
           type="button"
           onClick={handleSave}
@@ -247,6 +282,28 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
           }}
         >
           {existingReview ? "Atualizar crítica" : "Salvar crítica"}
+        </button>
+
+        <button
+          type="button"
+          onClick={handleAnalyze}
+          disabled={analysisState === "analyzing"}
+          style={{
+            fontFamily: "var(--font-neue-montreal)",
+            fontSize: "var(--text-caption)",
+            fontWeight: "var(--font-weight-bold)",
+            letterSpacing: "var(--tracking-caption)",
+            textTransform: "uppercase",
+            border: "1px solid var(--color-headline-ink)",
+            borderRadius: "var(--radius-buttons)",
+            padding: "12px 32px",
+            background: "transparent",
+            color: "var(--color-headline-ink)",
+            cursor: analysisState === "analyzing" ? "wait" : "pointer",
+            opacity: analysisState === "analyzing" ? 0.6 : 1,
+          }}
+        >
+          {analysisState === "analyzing" ? "Analisando…" : "Analisar crítica"}
         </button>
 
         {saveState === "saved" && (
@@ -273,6 +330,11 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
           </span>
         )}
       </div>
+
+      {/* Painel de análise */}
+      {analysis && (
+        <ReviewAnalysisPanel analysis={analysis} isStale={isStale} />
+      )}
     </div>
   );
 }
