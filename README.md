@@ -17,17 +17,44 @@ Nenhuma conta. Nenhum servidor. Todos os dados vivem no seu `localStorage`.
 | Estilo | Tailwind v4 + CSS Custom Properties |
 | Roteamento | React Router v7 |
 | Persistência | `localStorage` (local-first) |
+| Dados de filmes | TMDb API (somente leitura) |
 | Testes unitários | Vitest + React Testing Library |
 | Ícones | Lucide React (uso mínimo) |
+
+## Configuração
+
+### 1. Instalar dependências
+
+```bash
+npm install
+```
+
+### 2. Configurar chave TMDb
+
+Crie um arquivo `.env.local` na raiz do projeto (não é commitado):
+
+```bash
+VITE_TMDB_API_KEY=sua_chave_aqui
+```
+
+Obtenha sua chave gratuitamente em [themoviedb.org/settings/api](https://www.themoviedb.org/settings/api).
+
+> O app funciona sem a chave, mas a busca de filmes exibirá uma mensagem de configuração pendente.
+
+### 3. Rodar localmente
+
+```bash
+npm run dev
+```
 
 ## Arquitetura
 
 ```
 src/
-  components/     # Componentes base reutilizáveis (AppShell, Navigation, etc.)
+  components/     # Componentes base e de busca de filmes
   pages/          # Páginas da aplicação (uma por rota)
-  domain/         # Lógica de domínio e helpers (storage.ts, futura análise)
-  lib/            # Utilitários genéricos
+  domain/         # Lógica de domínio: storage, cache de buscas
+  lib/            # Cliente TMDb (tmdb.ts)
   data/           # Dados estáticos ou seeds
   styles/         # Tokens CSS (tokens.css)
   types.ts        # Tipos centrais da aplicação
@@ -56,6 +83,7 @@ A identidade visual segue o sistema **Henry** — broadside editorial monocromá
 - Zero sombras, zero gradientes, zero cores de destaque
 - `border-radius: 12px` único em cards, botões e tags
 - Seções alternam entre Paper (`#fafafa`) e Ink (`#2a2722`) como um broadsheet
+- Resultados de busca como fichas editoriais, não cards de marketplace
 
 ## Decisão: localStorage
 
@@ -63,10 +91,10 @@ O Review Heat é uma ferramenta pessoal, não um serviço. A escolha de `localSt
 
 ## Roadmap por sprints
 
-| Sprint | Foco |
-|--------|------|
-| **0** *(atual)* | Fundação: Vite, React, TypeScript, Tailwind, Vitest, tipos, storage, layout editorial |
-| 1 | Editor de críticas, CRUD completo, listagem na biblioteca |
-| 2 | Motor de análise: scoring de profundidade, especificidade, argumento, estilo |
-| 3 | Integração TMDb: busca de filmes, metadados, pôsteres |
-| 4 | Insights longitudinais: gráficos, padrões, evolução da escrita |
+| Sprint | Foco | Status |
+|--------|------|--------|
+| **0** | Fundação: Vite, React, TypeScript, Tailwind, Vitest, tipos, storage, layout editorial | ✅ Concluído |
+| **1** | Busca de filmes via TMDb, seleção, cache de buscas recentes | ✅ Concluído |
+| 2 | Editor de críticas, CRUD completo, salvamento no localStorage | Em planejamento |
+| 3 | Motor de análise: temperatura, scoring de profundidade, especificidade, argumento | Em planejamento |
+| 4 | Insights longitudinais: gráficos, padrões, evolução da escrita | Em planejamento |
