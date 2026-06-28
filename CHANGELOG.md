@@ -1,5 +1,24 @@
 # Changelog
 
+## [Unreleased] — Sprint 5: Biblioteca Avançada e Pipeline Editorial
+
+### Adicionado
+
+- `src/domain/reviewLibrary.ts` — domínio puro de biblioteca: tipos `LibraryViewMode`, `ReviewSortOption`, `ReviewAnalysisFilter`, `ReviewLibraryFilters`; funções `filterReviews`, `sortReviews`, `getAvailableTags`, `groupReviewsByStatus`, `getLibraryStats`, `isReviewAnalyzed`, `isReviewAnalysisStale`, `getReviewWordCount`, `DEFAULT_FILTERS`
+- `src/domain/reviewLibrary.test.ts` — 50 testes cobrindo busca textual, filtros por status/temperatura/análise/tag, ordenações, extração de tags, agrupamento por status, estatísticas e lista vazia
+- `src/components/LibraryStats.tsx` — painel de estatísticas editoriais no topo da biblioteca (total, analisadas, sem parecer, revisar, prontas, publicadas, stale)
+- `src/components/LibraryToolbar.tsx` — barra de busca + filtros (status, temperatura, análise, tag) + ordenação + modos de visualização (Arquivo / Pipeline) + botão limpar
+- `src/components/LibraryEmptyState.tsx` — empty state editorial para biblioteca vazia e para resultado filtrado vazio
+- `src/components/ReviewArchiveItem.tsx` — item de lista no modo Arquivo com ações rápidas: editar, mudar status (inline select), excluir com confirmação; badge "Parecer desatualizado"
+- `src/components/ReviewArchiveList.tsx` — lista de archive com cabeçalho editorial e delegação para empty states
+- `src/components/ReviewPipelineCard.tsx` — card do pipeline com mudança rápida de status via select sem drag-and-drop
+- `src/components/ReviewPipelineColumn.tsx` — coluna do pipeline com cabeçalho, contador e empty state vazio
+- `src/components/ReviewPipeline.tsx` — pipeline editorial agrupado por status: Ideia, Rascunho, Analisada, Revisar, Pronta, Publicada, Arquivada
+
+### Alterado
+
+- `src/pages/LibraryPage.tsx` — refatorada para suportar modo Arquivo e Pipeline; estado de filtros, ordenação, view mode; ações rápidas de status; delegate para novos componentes
+
 ## [Unreleased] — Sprint 4: Output Visual Premium da Análise
 
 ### Adicionado

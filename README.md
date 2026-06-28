@@ -92,7 +92,7 @@ A identidade visual segue o sistema **Henry** — broadside editorial monocromá
 3. **Escrever crítica** — formulário editorial com texto, título, nota, status, tags e link Letterboxd
 4. **Analisar** — clique em "Analisar crítica" para gerar diagnóstico local sem IA externa
 5. **Salvar** — review e análise persistem no `localStorage`, URL atualiza para `/escrever/:id`
-6. **Biblioteca** — `/biblioteca` lista todas as reviews com temperatura, score e status
+6. **Biblioteca** — `/biblioteca` lista todas as reviews em modo Arquivo ou Pipeline, com busca, filtros, ordenação e ações rápidas
 
 ## Motor de análise local
 
@@ -141,6 +141,53 @@ A temperatura é comunicada por tipografia, escala e contraste — sem cores de 
 Se o texto da crítica for modificado após uma análise, o painel exibe um aviso: **"Parecer desatualizado — O texto mudou desde a última análise. Reanalise para atualizar o parecer."**
 
 A detecção usa um hash determinístico simples do texto analisado, persistido junto da review no `localStorage`. Isso garante que o aviso funcione mesmo após recarregar a página.
+
+## Biblioteca avançada
+
+A biblioteca (`/biblioteca`) é um arquivo crítico pessoal com dois modos de visualização e um conjunto completo de filtros.
+
+### Modos de visualização
+
+| Modo | Descrição |
+|------|-----------|
+| **Arquivo** | Lista editorial com todos os metadados, status, temperatura e ações rápidas |
+| **Pipeline** | Colunas agrupadas por status — Ideia, Rascunho, Analisada, Revisar, Pronta, Publicada, Arquivada |
+
+### Busca textual
+
+A busca procura simultaneamente em: título do filme, ano, título da review, texto completo da crítica, tags, label de status e label de temperatura.
+
+### Filtros disponíveis
+
+| Filtro | Opções |
+|--------|--------|
+| **Status** | Todos / Ideia / Rascunho / Analisada / Revisar / Pronta / Publicada / Arquivada |
+| **Temperatura** | Toda temperatura / QUENTE / MORNA / FRESCA / FRIA / CONGELADA |
+| **Análise** | Todas / Analisadas / Sem parecer / Parecer desatualizado |
+| **Tag** | Todas as tags / qualquer tag presente nas reviews |
+
+### Ordenações disponíveis
+
+- Mais recentes / Mais antigas (por `updatedAt`)
+- Título A-Z / Título Z-A
+- Maior score / Menor score (reviews sem análise vão ao final)
+- Maior nota pessoal / Menor nota pessoal
+
+### Estatísticas da biblioteca
+
+No topo da biblioteca, um painel exibe: total, analisadas, sem parecer, revisar, prontas, publicadas e pareceres desatualizados.
+
+### Ações rápidas
+
+No modo Arquivo, cada item permite: **editar** (navega para o editor), **alterar status** (select inline), **excluir** (com confirmação). No Pipeline, cada card permite editar e mudar de status via select.
+
+### Limitações atuais
+
+- Sem drag-and-drop no pipeline (planejado para sprint futura)
+- Sem importação ou exportação de reviews
+- Sem integração automática com Letterboxd
+- Sem backend ou sincronização entre dispositivos
+- Sem gráficos de evolução longitudinal da escrita
 
 Reviews salvas antes da Sprint 4 sem `analysisTextHash` são compatíveis — o sistema usa comparação de texto em memória como fallback.
 
