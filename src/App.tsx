@@ -13,6 +13,7 @@ export function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/escrever" element={<WriteReviewPage />} />
+          <Route path="/escrever/:reviewId" element={<WriteReviewPage />} />
           <Route path="/biblioteca" element={<LibraryPage />} />
           <Route path="/insights" element={<InsightsPage />} />
           <Route path="/configuracoes" element={<SettingsPage />} />

@@ -1,6 +1,32 @@
 # Changelog
 
-## [Unreleased] — Sprint 1: Busca de Filmes via TMDb
+## [Unreleased] — Sprint 2: Escrita e Salvamento de Reviews
+
+### Adicionado
+
+- `src/domain/reviews.ts` — serviço de domínio com CRUD completo de reviews: `createReview`, `getReviews`, `getReviewById`, `updateReview`, `deleteReview`, `clearReviews`, `countWords`, `STATUS_LABELS`
+- `src/domain/reviews.test.ts` — 19 testes cobrindo criação, validação, normalização de tags, atualização, exclusão e limpeza
+- `src/components/ReviewEditor.tsx` — formulário editorial completo (texto, título, nota, status, tags, Letterboxd), contador de palavras, estado visual de salvo
+- `src/components/TagInput.tsx` — input de tags com adição por Enter/vírgula, remoção individual, deduplicação case-insensitive
+- Rota `/escrever/:reviewId` em `App.tsx` para edição de review existente via URL
+
+### Alterado
+
+- `src/pages/WriteReviewPage.tsx` — integra `ReviewEditor`, carrega review existente pela URL, redireciona para `/escrever/:id` após salvar, suporta modo criação e edição
+- `src/pages/LibraryPage.tsx` — lista reviews reais do localStorage, exibe poster, título, ano, status, nota, tags, contagem de palavras, data; ações de editar e excluir com confirmação; estado vazio com CTA
+- `README.md` — fluxo atual do app, chaves de localStorage, limitações da Sprint 2, roadmap atualizado
+
+### Decisões técnicas
+
+- **Chave versionada** `review-heat:reviews:v1`: facilita migração futura sem quebrar dados
+- **`crypto.randomUUID()` com fallback**: IDs únicos sem dependência externa
+- **Tags normalizadas no domínio**: trim, sem vazias, sem duplicatas case-insensitive — a UI nunca recebe dados sujos
+- **Rota dinâmica `/escrever/:reviewId`**: URL reflete o estado, permite abrir link direto para edição
+- **Biblioteca sem análise**: status, contagem de palavras e metadados editoriais sem qualquer IA ainda
+
+---
+
+## Sprint 1: Busca de Filmes via TMDb
 
 ### Adicionado
 

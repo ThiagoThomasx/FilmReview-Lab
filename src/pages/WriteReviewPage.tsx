@@ -1,11 +1,13 @@
-import { useState, useCallback } from "react";
-import type { MovieInfo } from "../types";
+import { useState, useCallback, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import type { MovieInfo, ReviewEntry } from "../types";
 import { searchMovies } from "../lib/tmdb";
 import {
   saveSearch,
   getRecentQueries,
   clearSearchCache,
 } from "../domain/movieSearchCache";
+import { getReviewById } from "../domain/reviews";
 import { EditorialSection, InvertedSection } from "../components/EditorialSection";
 import { PageHeading } from "../components/PageHeading";
 import { Rule } from "../components/Rule";
@@ -13,17 +15,31 @@ import { MovieSearchForm } from "../components/MovieSearchForm";
 import { MovieResultList } from "../components/MovieResultList";
 import { SelectedMoviePanel } from "../components/SelectedMoviePanel";
 import { RecentSearches } from "../components/RecentSearches";
+import { ReviewEditor } from "../components/ReviewEditor";
 
 type SearchStatus = "idle" | "loading" | "error" | "success" | "no-api-key";
 
 export function WriteReviewPage() {
+  const { reviewId } = useParams<{ reviewId?: string }>();
+  const navigate = useNavigate();
+
   const [status, setStatus] = useState<SearchStatus>("idle");
   const [results, setResults] = useState<MovieInfo[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedMovie, setSelectedMovie] = useState<MovieInfo | null>(null);
+  const [existingReview, setExistingReview] = useState<ReviewEntry | undefined>(undefined);
   const [recentQueries, setRecentQueries] = useState<string[]>(() =>
     getRecentQueries(),
   );
+
+  useEffect(() => {
+    if (!reviewId) return;
+    const review = getReviewById(reviewId);
+    if (review) {
+      setExistingReview(review);
+      setSelectedMovie(review.movie);
+    }
+  }, [reviewId]);
 
   const handleSearch = useCallback(async (query: string) => {
     const trimmed = query.trim();
@@ -33,6 +49,7 @@ export function WriteReviewPage() {
     setResults([]);
     setErrorMessage("");
     setSelectedMovie(null);
+    setExistingReview(undefined);
 
     try {
       const found = await searchMovies(trimmed);
@@ -55,11 +72,14 @@ export function WriteReviewPage() {
     setSelectedMovie(movie);
     setResults([]);
     setStatus("idle");
+    setExistingReview(undefined);
   }, []);
 
   const handleClearSelection = useCallback(() => {
     setSelectedMovie(null);
-  }, []);
+    setExistingReview(undefined);
+    if (reviewId) navigate("/escrever", { replace: true });
+  }, [reviewId, navigate]);
 
   const handleRecentSearch = useCallback(
     (query: string) => {
@@ -73,20 +93,40 @@ export function WriteReviewPage() {
     setRecentQueries([]);
   }, []);
 
+  const handleSaved = useCallback(
+    (review: ReviewEntry) => {
+      setExistingReview(review);
+      if (!reviewId) {
+        navigate(`/escrever/${review.id}`, { replace: true });
+      }
+    },
+    [reviewId, navigate],
+  );
+
+  const isEditing = Boolean(existingReview);
+
   return (
     <>
-      {/* Hero editorial */}
       <EditorialSection paddingY="var(--spacing-80)">
-        <PageHeading eyebrow="Novo registro">
-          Busque
-          <br />
-          <em>o filme.</em>
+        <PageHeading eyebrow={isEditing ? "Editando crítica" : "Novo registro"}>
+          {isEditing ? (
+            <>
+              Editar
+              <br />
+              <em>crítica.</em>
+            </>
+          ) : (
+            <>
+              Busque
+              <br />
+              <em>o filme.</em>
+            </>
+          )}
         </PageHeading>
       </EditorialSection>
 
       <Rule />
 
-      {/* Manifesto invertido */}
       <InvertedSection paddingY="var(--spacing-64)">
         <div
           style={{
@@ -108,7 +148,7 @@ export function WriteReviewPage() {
               opacity: 0.6,
             }}
           >
-            Fluxo — Passo 1 de 3
+            {isEditing ? "Fluxo — Editando" : "Fluxo — Passo 1 de 3"}
           </span>
           <p
             style={{
@@ -119,15 +159,16 @@ export function WriteReviewPage() {
               color: "var(--color-paper)",
             }}
           >
-            Encontre o filme. Na próxima sprint, você escreve a crítica e
-            recebe a temperatura da sua escrita.
+            {isEditing
+              ? "Refine sua crítica. Atualize texto, status e tags quando quiser."
+              : "Encontre o filme. Depois escreva a crítica e salve no seu arquivo pessoal."}
           </p>
         </div>
       </InvertedSection>
 
       <Rule />
 
-      {/* Área de busca ou ficha do filme selecionado */}
+      {/* Seleção de filme */}
       <EditorialSection paddingY="var(--spacing-64)">
         {selectedMovie ? (
           <>
@@ -182,6 +223,32 @@ export function WriteReviewPage() {
           </>
         )}
       </EditorialSection>
+
+      {/* Formulário de escrita */}
+      {selectedMovie && (
+        <>
+          <Rule />
+          <EditorialSection paddingY="var(--spacing-64)">
+            <div
+              style={{
+                fontFamily: "var(--font-neue-montreal)",
+                fontSize: "var(--text-caption)",
+                letterSpacing: "var(--tracking-caption)",
+                textTransform: "uppercase",
+                color: "var(--color-ash)",
+                marginBottom: "var(--spacing-32)",
+              }}
+            >
+              {isEditing ? "Editar crítica" : "Escrever crítica"}
+            </div>
+            <ReviewEditor
+              movie={selectedMovie}
+              existingReview={existingReview}
+              onSaved={handleSaved}
+            />
+          </EditorialSection>
+        </>
+      )}
     </>
   );
 }

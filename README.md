@@ -53,7 +53,7 @@ npm run dev
 src/
   components/     # Componentes base e de busca de filmes
   pages/          # Páginas da aplicação (uma por rota)
-  domain/         # Lógica de domínio: storage, cache de buscas
+  domain/         # Lógica de domínio: storage, cache de buscas, reviews
   lib/            # Cliente TMDb (tmdb.ts)
   data/           # Dados estáticos ou seeds
   styles/         # Tokens CSS (tokens.css)
@@ -85,6 +85,29 @@ A identidade visual segue o sistema **Henry** — broadside editorial monocromá
 - Seções alternam entre Paper (`#fafafa`) e Ink (`#2a2722`) como um broadsheet
 - Resultados de busca como fichas editoriais, não cards de marketplace
 
+## Fluxo atual do app
+
+1. **Buscar filme** — pesquise pelo nome em `/escrever`, buscas recentes são cacheadas
+2. **Selecionar filme** — o painel exibe poster e metadados do filme
+3. **Escrever crítica** — formulário editorial com texto, título, nota, status, tags e link Letterboxd
+4. **Salvar** — review persiste no `localStorage` e a URL atualiza para `/escrever/:id`
+5. **Biblioteca** — `/biblioteca` lista todas as reviews salvas com edição e exclusão
+
+## Persistência de dados
+
+Todos os dados ficam no `localStorage` do navegador, sem servidor.
+
+| Dado | Chave localStorage |
+|------|--------------------|
+| Reviews | `review-heat:reviews:v1` |
+| Cache de buscas | `review-heat:search-cache:v1` |
+
+### Limitações atuais (Sprint 2)
+
+- Nenhuma análise automática de texto
+- Nenhum cálculo de temperatura
+- Nenhum score ou insight — previsto para Sprint 3
+
 ## Decisão: localStorage
 
 O Review Heat é uma ferramenta pessoal, não um serviço. A escolha de `localStorage` elimina a necessidade de conta, autenticação, servidor e custos de infraestrutura. O usuário possui todos os seus dados e pode exportá-los manualmente. A desvantagem é que os dados não são sincronizados entre dispositivos — uma limitação consciente e aceitável para o caso de uso.
@@ -95,6 +118,6 @@ O Review Heat é uma ferramenta pessoal, não um serviço. A escolha de `localSt
 |--------|------|--------|
 | **0** | Fundação: Vite, React, TypeScript, Tailwind, Vitest, tipos, storage, layout editorial | ✅ Concluído |
 | **1** | Busca de filmes via TMDb, seleção, cache de buscas recentes | ✅ Concluído |
-| 2 | Editor de críticas, CRUD completo, salvamento no localStorage | Em planejamento |
+| **2** | Editor de críticas, CRUD completo, salvamento no localStorage, biblioteca | ✅ Concluído |
 | 3 | Motor de análise: temperatura, scoring de profundidade, especificidade, argumento | Em planejamento |
 | 4 | Insights longitudinais: gráficos, padrões, evolução da escrita | Em planejamento |
