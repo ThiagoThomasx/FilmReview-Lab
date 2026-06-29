@@ -2,6 +2,39 @@ import { Link } from "react-router-dom";
 import { EditorialSection, InvertedSection } from "../components/EditorialSection";
 import { Rule } from "../components/Rule";
 
+const FEATURES = [
+  {
+    id: "busca",
+    title: "Busca cinematográfica",
+    desc: "Encontre qualquer filme via TMDb. Pôsteres, ano, elenco e metadados integrados à review.",
+  },
+  {
+    id: "analise",
+    title: "Parecer editorial",
+    desc: "Motor local de análise mede profundidade, especificidade, argumento, estilo e técnica.",
+  },
+  {
+    id: "temperatura",
+    title: "Temperatura crítica",
+    desc: "Score de 0 a 100 classificado em cinco graus — de Incandescente a Congelada.",
+  },
+  {
+    id: "pipeline",
+    title: "Pipeline de produção",
+    desc: "Da ideia à publicação. Sete estágios rastreiam onde cada crítica está e o que ela precisa.",
+  },
+  {
+    id: "insights",
+    title: "Insights de evolução",
+    desc: "Relatório longitudinal: pontos fortes, fragilidades, melhores críticas e reescritas prioritárias.",
+  },
+  {
+    id: "backup",
+    title: "Arquivo local-first",
+    desc: "Nenhum servidor. Nenhuma conta. Tudo no navegador, exportável como JSON a qualquer momento.",
+  },
+];
+
 export function HomePage() {
   return (
     <>
@@ -23,7 +56,7 @@ export function HomePage() {
             <h1
               style={{
                 fontFamily: "var(--font-louize-display)",
-                fontSize: "clamp(64px, 10vw, var(--text-display))",
+                fontSize: "clamp(48px, 10vw, var(--text-display))",
                 fontWeight: "var(--font-weight-regular)",
                 lineHeight: "var(--leading-display)",
                 color: "var(--color-headline-ink)",
@@ -53,8 +86,9 @@ export function HomePage() {
           <div
             style={{
               display: "flex",
-              gap: "var(--spacing-24)",
+              gap: "var(--spacing-16)",
               marginTop: "var(--spacing-64)",
+              flexWrap: "wrap",
             }}
           >
             <Link
@@ -152,7 +186,7 @@ export function HomePage() {
 
       <Rule />
 
-      {/* Sprint roadmap teaser */}
+      {/* Features */}
       <EditorialSection paddingY="var(--spacing-80)">
         <div
           style={{
@@ -170,7 +204,7 @@ export function HomePage() {
               color: "var(--color-headline-ink)",
             }}
           >
-            O que vem aí
+            O que você pode fazer
           </h2>
           <span
             style={{
@@ -181,7 +215,7 @@ export function HomePage() {
               color: "var(--color-ash)",
             }}
           >
-            Roadmap
+            V1
           </span>
         </div>
 
@@ -192,30 +226,9 @@ export function HomePage() {
             gap: "var(--spacing-4)",
           }}
         >
-          {[
-            {
-              sprint: "Sprint 1",
-              title: "Editor & armazenamento",
-              desc: "Campo de escrita, salvamento no localStorage, listagem.",
-            },
-            {
-              sprint: "Sprint 2",
-              title: "Análise de temperatura",
-              desc: "Motor de scoring: profundidade, especificidade, argumento.",
-            },
-            {
-              sprint: "Sprint 3",
-              title: "TMDb & metadados",
-              desc: "Busca de filmes, pôsteres, géneros e informações do elenco.",
-            },
-            {
-              sprint: "Sprint 4",
-              title: "Insights & evolução",
-              desc: "Gráficos longitudinais, padrões, sugestões de melhoria.",
-            },
-          ].map((item, i) => (
+          {FEATURES.map((item, i) => (
             <div
-              key={item.sprint}
+              key={item.id}
               style={{
                 borderTop: i === 0 ? "1px solid var(--color-hairline)" : "none",
                 borderBottom: "1px solid var(--color-hairline)",
@@ -224,21 +237,10 @@ export function HomePage() {
                 display: "flex",
                 gap: "var(--spacing-32)",
                 alignItems: "baseline",
+                flexWrap: "wrap",
               }}
             >
-              <span
-                style={{
-                  fontFamily: "var(--font-neue-montreal)",
-                  fontSize: "var(--text-caption)",
-                  letterSpacing: "var(--tracking-caption)",
-                  textTransform: "uppercase",
-                  color: "var(--color-pebble)",
-                  minWidth: "80px",
-                }}
-              >
-                {item.sprint}
-              </span>
-              <div>
+              <div style={{ flex: 1, minWidth: "200px" }}>
                 <span
                   style={{
                     fontFamily: "var(--font-neue-montreal)",

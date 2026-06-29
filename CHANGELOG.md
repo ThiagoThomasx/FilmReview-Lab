@@ -1,5 +1,40 @@
 # Changelog
 
+## [1.0.0] — Sprint 8: Polimento Final, QA, Responsividade e Deploy
+
+### Corrigido
+
+- **Bug crítico**: `InsightsPage` navegava para `/write/:id` (rota inexistente) ao editar review; corrigido para `/escrever/:id`
+- **Acessibilidade**: removido `outline: "none"` dos inputs do `ReviewEditor` — foco de teclado agora é visível
+- **Acessibilidade**: adicionado `<label>` acessível para o input de confirmação de exclusão ("APAGAR") no `SettingsPage`
+- **Acessibilidade**: adicionado `aria-label` para o input de arquivo oculto no `SettingsPage`
+
+### Adicionado
+
+- **Foco visível global**: `:focus-visible` com outline 2px em `tokens.css` — todos os inputs, botões e links têm indicador de foco acessível
+- **Menu mobile**: `Navigation.tsx` agora inclui botão hamburguer com estado open/close, menu dropdown para telas ≤768px
+- **`docs/QA_CHECKLIST.md`**: checklist completo de QA cobrindo todos os fluxos (busca, escrita, análise, biblioteca, pipeline, insights, backup, demo, limpeza, mobile, desktop, acessibilidade, build e deploy)
+
+### Alterado
+
+- **`Navigation.tsx`**: active state deixou de mudar font-size (causava layout shift); agora usa opacity + border-bottom discreto; navegação mobile responsiva
+- **`EditorialSection.tsx`** e **`InvertedSection.tsx`**: padding lateral usa classe CSS `.section-pad` responsiva (32px → 16px em mobile)
+- **`HomePage.tsx`**: seção "O que vem aí" (roadmap desatualizado) substituída por "O que você pode fazer" — lista das 6 features reais implementadas na V1
+- **`InsightsPage.tsx`**: grades com colunas fixas em px (`DimensionRow`, `HorizontalBar`, `MonthTable`) substituídas por classes CSS responsivas; coluna dupla Temperatura/Status empilha em mobile
+- **`SettingsPage.tsx`**: `SectionRow` usa classe `.section-row-flex` — empilha verticalmente em mobile; grid de stats usa `.stats-grid-3` — 3→2 colunas em mobile
+- **`ReviewEditor.tsx`**: grid Status/Nota usa `.grid-2col` — empilha verticalmente em telas muito pequenas
+- **`tokens.css`**: adicionado `overflow-x: hidden` no body; adicionado `--spacing-48`; adicionadas classes utilitárias responsivas (`.section-pad`, `.nav-menu`, `.nav-hamburger`, `.grid-insights-bar`, `.grid-insights-dim`, `.grid-insights-month`, `.grid-temp-status`, `.section-row-flex`, `.stats-grid-3`, `.grid-2col`) com media queries para mobile
+- **`README.md`**: reescrito completamente para V1 com visão, features, stack, arquitetura, design system, localStorage, TMDb, scripts, deploy Vercel, limitações e roadmap
+- **`.env.example`**: mantido com instrução clara para `VITE_TMDB_API_KEY`
+
+### Qualidade
+
+- Typecheck: limpo (sem erros TypeScript)
+- Testes: 227 passando (sem regressões)
+- Build: produção sem erros
+
+---
+
 ## [Unreleased] — Sprint 7: Backup, Import/Export e Dados Demo
 
 ### Adicionado

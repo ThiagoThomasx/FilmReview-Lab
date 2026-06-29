@@ -221,7 +221,7 @@ export function ReviewEditor({ movie, existingReview, onSaved }: Props) {
       </div>
 
       {/* Status e nota */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--spacing-16)" }}>
+      <div className="grid-2col" style={{ gap: "var(--spacing-16)" }}>
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--spacing-8)" }}>
           <label style={labelStyle}>Status</label>
           <select
@@ -366,5 +366,4 @@ const inputStyle: React.CSSProperties = {
   fontFamily: "var(--font-neue-montreal)",
   fontSize: "var(--text-body)",
   color: "var(--color-headline-ink)",
-  outline: "none",
 };

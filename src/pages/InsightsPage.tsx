@@ -127,14 +127,11 @@ function HorizontalBar({
   const barFill = inverted ? "var(--color-paper)" : "var(--color-headline-ink)";
   return (
     <div
+      className="grid-insights-bar"
       style={{
         borderBottom: `1px solid ${inverted ? "rgba(255,255,255,0.1)" : "var(--color-hairline)"}`,
         paddingTop: "var(--spacing-12)",
         paddingBottom: "var(--spacing-12)",
-        display: "grid",
-        gridTemplateColumns: "160px 1fr 48px",
-        alignItems: "center",
-        gap: "var(--spacing-16)",
       }}
     >
       <span
@@ -194,14 +191,11 @@ function DimensionRow({
   const pct = score !== null ? score : 0;
   return (
     <div
+      className="grid-insights-dim"
       style={{
         borderBottom: "1px solid var(--color-hairline)",
         paddingTop: "var(--spacing-16)",
         paddingBottom: "var(--spacing-16)",
-        display: "grid",
-        gridTemplateColumns: "180px 1fr 80px 80px",
-        alignItems: "center",
-        gap: "var(--spacing-16)",
       }}
     >
       <span
@@ -253,7 +247,9 @@ function DimensionRow({
           textAlign: "right",
         }}
       >
-        {isStrongest ? "↑ mais forte" : isWeakest ? "↓ mais fraca" : ""}
+        <span className="dim-label-extra">
+          {isStrongest ? "↑ mais forte" : isWeakest ? "↓ mais fraca" : ""}
+        </span>
       </span>
     </div>
   );
@@ -392,14 +388,11 @@ function MonthTable({
         return (
           <div
             key={month}
+            className="grid-insights-month"
             style={{
               borderBottom: "1px solid var(--color-hairline)",
               paddingTop: "var(--spacing-12)",
               paddingBottom: "var(--spacing-12)",
-              display: "grid",
-              gridTemplateColumns: "80px 1fr 60px 48px",
-              alignItems: "center",
-              gap: "var(--spacing-16)",
             }}
           >
             <span
@@ -441,6 +434,7 @@ function MonthTable({
               {count} {count === 1 ? "review" : "reviews"}
             </span>
             <span
+              className="month-score"
               style={{
                 fontFamily: "var(--font-louize-display)",
                 fontSize: "var(--text-body)",
@@ -610,13 +604,7 @@ function InsightsDashboard({
 
       {/* Temperatura e Status */}
       <EditorialSection paddingY="var(--spacing-64)">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "var(--spacing-48)",
-          }}
-        >
+        <div className="grid-temp-status">
           <div>
             <SectionTitle>Temperatura</SectionTitle>
             {TEMPERATURES_ORDER.map((t) => (
@@ -656,10 +644,8 @@ function InsightsDashboard({
               }}
             >
               <div
+                className="grid-insights-month"
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "80px 1fr 60px 48px",
-                  gap: "var(--spacing-16)",
                   paddingTop: "var(--spacing-8)",
                   paddingBottom: "var(--spacing-8)",
                   borderBottom: "1px solid var(--color-hairline)",
@@ -857,7 +843,7 @@ export function InsightsPage() {
   const hasReviews = reviews.length > 0;
   const hasAnalysis = insights.analyzedReviews > 0;
 
-  const handleEdit = (id: string) => navigate(`/write/${id}`);
+  const handleEdit = (id: string) => navigate(`/escrever/${id}`);
 
   return (
     <>

@@ -13,13 +13,12 @@ export function EditorialSection({
 }: EditorialSectionProps) {
   return (
     <section
+      className="section-pad"
       style={{
         backgroundColor: "var(--color-paper)",
         color: "var(--color-headline-ink)",
         paddingTop: paddingY,
         paddingBottom: paddingY,
-        paddingLeft: "var(--spacing-32)",
-        paddingRight: "var(--spacing-32)",
         width: "100%",
         ...style,
       }}
@@ -42,13 +41,12 @@ export function InvertedSection({
 }: InvertedSectionProps) {
   return (
     <section
+      className="section-pad"
       style={{
         backgroundColor: "var(--color-headline-ink)",
         color: "var(--color-paper)",
         paddingTop: paddingY,
         paddingBottom: paddingY,
-        paddingLeft: "var(--spacing-32)",
-        paddingRight: "var(--spacing-32)",
         width: "100%",
         ...style,
       }}

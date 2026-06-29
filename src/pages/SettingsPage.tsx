@@ -78,15 +78,12 @@ function SectionRow({
 }) {
   return (
     <div
+      className="section-row-flex"
       style={{
         borderTop: isFirst ? "1px solid var(--color-hairline)" : "none",
         borderBottom: "1px solid var(--color-hairline)",
         paddingTop: "var(--spacing-20)",
         paddingBottom: "var(--spacing-20)",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        gap: "var(--spacing-32)",
       }}
     >
       {children}
@@ -250,12 +247,10 @@ export function SettingsPage() {
       {/* ── estado do arquivo ─────────────────────────── */}
       <InvertedSection paddingY="var(--spacing-64)">
         <div
+          className="stats-grid-3"
           style={{
             maxWidth: "720px",
             margin: "0 auto",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "var(--spacing-32)",
           }}
         >
           {[
@@ -339,12 +334,17 @@ export function SettingsPage() {
                   Confirmar importação
                 </button>
               )}
+              <label htmlFor="import-file" style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}>
+                Selecionar arquivo de backup JSON
+              </label>
               <input
                 ref={fileInputRef}
+                id="import-file"
                 type="file"
                 accept=".json"
                 style={{ display: "none" }}
                 onChange={handleFileChange}
+                aria-label="Selecionar arquivo de backup JSON"
               />
             </div>
           </SectionRow>
@@ -375,12 +375,17 @@ export function SettingsPage() {
                 Ação irreversível. Faça um backup antes.
               </span>
               <div style={{ display: "flex", gap: "var(--spacing-8)", alignItems: "center", marginTop: "var(--spacing-8)" }}>
+                <label htmlFor="confirm-clear" style={{ position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap" }}>
+                  Confirmação de exclusão — digite APAGAR
+                </label>
                 <input
+                  id="confirm-clear"
                   type="text"
                   placeholder="Digite APAGAR"
                   value={clearWord}
                   onChange={(e) => setClearWord(e.target.value)}
                   style={inputStyle}
+                  aria-describedby="clear-desc"
                 />
                 <button
                   style={{
