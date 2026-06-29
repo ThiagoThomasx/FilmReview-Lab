@@ -1,5 +1,25 @@
 # Changelog
 
+## [Unreleased] — Sprint 7: Backup, Import/Export e Dados Demo
+
+### Adicionado
+
+- `src/domain/backup.ts` — domínio puro de backup: tipo `ReviewHeatBackup` (versionado com `app`, `version: 1`, `exportedAt`, `data.reviews`, `data.recentSearches`); funções `createBackup`, `serializeBackup`, `parseBackup`, `validateBackup`, `importBackup`, `downloadBackup`
+- `src/data/demoReviews.ts` — 7 reviews demo realistas com filmes diferentes, statuses variados (publicada, pronta, needs_revision, analisada, rascunho, ideia, arquivada), textos com diferentes níveis de qualidade; análises geradas pelo motor local com `analysisTextHash` coerente; função `getDemoReviews()`
+- `src/domain/backup.test.ts` — 23 testes cobrindo: criação de backup, serialização, parse de JSON válido/inválido, validação de app/version corretos e incorretos, rejeição de campos ausentes, aceitação de campos extras, importBackup substituindo dados, proteção contra dados inválidos não sobrescreverem dados existentes
+
+### Alterado
+
+- `src/domain/reviews.ts` — adicionada função `replaceReviews(reviews: ReviewEntry[]): void` para substituição atômica do array de reviews com validação de tipo
+- `src/domain/reviews.test.ts` — 3 novos testes para `replaceReviews`: substituição com novo array, substituição com array vazio, rejeição de argumentos inválidos
+- `src/pages/SettingsPage.tsx` — substituído placeholder estático por painel editorial funcional com quatro seções:
+  - **Estado do arquivo** — total de reviews, analisadas e tamanho estimado do backup em seção invertida
+  - **Exportar backup** — botão "Baixar JSON" gera arquivo `review-heat-backup-YYYY-MM-DD.json` com feedback textual
+  - **Importar backup** — seleção de arquivo `.json` com validação antes de alterar dados, confirmação antes de substituir, mensagem de sucesso com contagem restaurada
+  - **Dados demo** — botão com confirmação para carregar 7 reviews de exemplo
+  - **Limpar todos os dados** — campo de confirmação exigindo digitação de `APAGAR` + limpeza de reviews e cache de buscas
+- `README.md` — adicionada seção completa "Backup e gestão de dados" com exportação, importação, dados demo, limpeza segura, riscos do localStorage e recomendação de backup regular; chave de cache corrigida; roadmap atualizado com Sprint 7 concluída; limitação de "Sem importação ou exportação" removida
+
 ## [Unreleased] — Sprint 6: Insights de Evolução Crítica
 
 ### Adicionado

@@ -6,6 +6,7 @@ import {
   updateReview,
   deleteReview,
   clearReviews,
+  replaceReviews,
   countWords,
 } from "./reviews";
 
@@ -153,6 +154,51 @@ describe("clearReviews", () => {
     createReview({ movie: mockMovie, text: "B" });
     clearReviews();
     expect(getReviews()).toHaveLength(0);
+  });
+});
+
+describe("replaceReviews", () => {
+  it("substitui todas as reviews com um novo array", () => {
+    createReview({ movie: mockMovie, text: "review original" });
+    expect(getReviews()).toHaveLength(1);
+
+    const newReviews = [
+      {
+        id: "r1",
+        movie: { title: "Novo Filme" },
+        text: "texto novo",
+        status: "draft" as const,
+        tags: [],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: "r2",
+        movie: { title: "Outro Filme" },
+        text: "outro texto",
+        status: "ready" as const,
+        tags: ["tag"],
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    ];
+
+    replaceReviews(newReviews);
+    const result = getReviews();
+    expect(result).toHaveLength(2);
+    expect(result.map((r) => r.id)).toContain("r1");
+    expect(result.map((r) => r.id)).toContain("r2");
+  });
+
+  it("substitui com array vazio limpando todos os dados", () => {
+    createReview({ movie: mockMovie, text: "review existente" });
+    replaceReviews([]);
+    expect(getReviews()).toHaveLength(0);
+  });
+
+  it("lança erro quando argumento não é array", () => {
+    expect(() => replaceReviews(null as unknown as never[])).toThrow();
+    expect(() => replaceReviews("string" as unknown as never[])).toThrow();
   });
 });
 

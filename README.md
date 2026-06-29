@@ -185,7 +185,6 @@ No modo Arquivo, cada item permite: **editar** (navega para o editor), **alterar
 ### Limitações atuais
 
 - Sem drag-and-drop no pipeline (planejado para sprint futura)
-- Sem importação ou exportação de reviews
 - Sem integração automática com Letterboxd
 - Sem backend ou sincronização entre dispositivos
 
@@ -230,6 +229,45 @@ Reviews salvas antes da Sprint 4 sem `analysisTextHash` são compatíveis — o 
 - Reviews em outros idiomas não são suportadas (vocabulário em português).
 - Nenhuma IA externa é usada — nesta versão, o motor é intencionalmente baseado em heurísticas e vocabulário.
 
+## Backup e gestão de dados
+
+A aba **Configurações** (`/configuracoes`) é o painel de controle do arquivo local.
+
+### Exportar backup
+
+Clique em **Baixar JSON** para gerar um arquivo `review-heat-backup-YYYY-MM-DD.json`. O arquivo contém todas as suas reviews, análises e histórico de buscas. O formato é versionado:
+
+```json
+{
+  "app": "review-heat",
+  "version": 1,
+  "exportedAt": "2025-01-15T10:30:00.000Z",
+  "data": {
+    "reviews": [ ... ],
+    "recentSearches": [ ... ]
+  }
+}
+```
+
+### Importar backup
+
+Selecione um arquivo `.json` gerado pelo Review Heat. O sistema valida o formato antes de qualquer alteração — se o arquivo for inválido ou de outra aplicação, os dados atuais não são tocados. Após a validação, uma confirmação é exibida antes de substituir os dados.
+
+### Dados demo
+
+Carrega 7 reviews de exemplo realistas com statuses variados (publicada, pronta, revisar, analisada, rascunho, ideia, arquivada) para explorar a Biblioteca e os Insights sem precisar escrever reviews reais.
+
+### Limpar todos os dados
+
+Digite `APAGAR` no campo de confirmação e clique em **Apagar tudo**. Remove todas as reviews e o histórico de buscas. Esta ação é irreversível — exporte um backup antes.
+
+### Riscos do localStorage
+
+- **Limpar dados do navegador** apaga todas as reviews permanentemente.
+- O `localStorage` tem um limite de ~5 MB por domínio — arquivos com muitas reviews longas podem se aproximar desse limite.
+- Os dados não são sincronizados entre dispositivos ou navegadores diferentes.
+- **Recomendação:** exporte um backup regularmente, especialmente antes de atualizar o navegador ou limpar o cache.
+
 ## Persistência de dados
 
 Todos os dados ficam no `localStorage` do navegador, sem servidor.
@@ -237,7 +275,7 @@ Todos os dados ficam no `localStorage` do navegador, sem servidor.
 | Dado | Chave localStorage |
 |------|--------------------|
 | Reviews e análises | `review-heat:reviews:v1` |
-| Cache de buscas | `review-heat:search-cache:v1` |
+| Cache de buscas | `review-heat:search-cache` |
 
 ## Decisão: localStorage
 
@@ -254,4 +292,4 @@ O Review Heat é uma ferramenta pessoal, não um serviço. A escolha de `localSt
 | **4** | Output visual premium: diagnóstico editorial, checklist de reescrita, termos detectados, staleness persistido | ✅ Concluído |
 | **5** | Biblioteca avançada: busca, filtros, ordenação, pipeline, estatísticas, ações rápidas | ✅ Concluído |
 | **6** | Insights críticos: domínio de insights, panorama geral, dimensões, distribuições, produção mensal, top reviews | ✅ Concluído |
-| 7 | Exportação / importação de reviews, backup, sincronização | Em planejamento |
+| **7** | Backup versionado, export/import JSON, dados demo, limpeza segura, configurações funcionais | ✅ Concluído |

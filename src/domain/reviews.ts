@@ -122,6 +122,13 @@ export function clearReviews(): void {
   persist([]);
 }
 
+export function replaceReviews(reviews: ReviewEntry[]): void {
+  if (!Array.isArray(reviews)) {
+    throw new Error("replaceReviews: esperado um array de reviews.");
+  }
+  persist(reviews);
+}
+
 export function countWords(text: string): number {
   const trimmed = text.trim();
   if (!trimmed) return 0;
