@@ -161,7 +161,8 @@ export function SelectedMoviePanel({ movie, onClear }: Props) {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          gap: "var(--spacing-24)",
+          gap: "var(--spacing-16)",
+          flexWrap: "wrap",
         }}
       >
         <p
@@ -174,7 +175,7 @@ export function SelectedMoviePanel({ movie, onClear }: Props) {
             margin: 0,
           }}
         >
-          Na próxima sprint, esta seleção será usada para escrever e salvar a review.
+          Filme selecionado — escreva, salve e analise sua crítica no editor abaixo.
         </p>
         <button
           onClick={onClear}
@@ -191,6 +192,7 @@ export function SelectedMoviePanel({ movie, onClear }: Props) {
             padding: "6px 16px",
             cursor: "pointer",
             whiteSpace: "nowrap",
+            flexShrink: 0,
           }}
         >
           Trocar filme
